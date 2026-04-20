@@ -1,5 +1,6 @@
 import { useRouter } from "../hooks/useRouter";
 
+//TODO: Deprecated
 export function Route({ path, component: Component }) {
   const { currentPath } = useRouter();
 
