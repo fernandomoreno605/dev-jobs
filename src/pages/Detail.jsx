@@ -21,7 +21,7 @@ function JobSection({ title, content }) {
   );
 }
 
-export function JobDetail() {
+export default function JobDetail() {
   const { navigateTo } = useRouter();
   const { id } = useParams();
   const [job, setJob] = useState({});
