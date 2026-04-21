@@ -1,18 +1,19 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { useRouter } from "./useRouter";
+import { useSearchParams } from "react-router";
 
 export function useFilters() {
   const RESULTS_PER_PAGE = 5;
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [currentPage, setCurrentPage] = useState(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    return Number(urlParams.get('page')) || 1;
+    return Number(searchParams.get('page')) || 1;
   });
 
   const [textToFilter, setTextToFilter] = useState(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('text') || '';
+    return searchParams.get('text') || '';
   });
 
   const [jobs, setJobs] = useState([]);
@@ -80,22 +81,21 @@ export function useFilters() {
   }, [filters, textToFilter, currentPage]);
 
   useEffect(() => {
-    const params = new URLSearchParams();
-    if (textToFilter) params.append('text', textToFilter);
-    if (filters.technology) params.append('technology', filters.technology);
-    if (filters.location) params.append('type', filters.location);
-    if (filters.experience) params.append('level', filters.experience);
+    setSearchParams((params) => {
+      textToFilter ? params.set('text', textToFilter) : params.delete('text');
 
-    if (currentPage > 1) params.append('page', currentPage);
+      filters.technology ? params.set('technology', filters.technology) : params.delete('technology');
 
-    const queryParams = params.toString();
-    const newUrl = queryParams
-      ? `${window.location.pathname}?${queryParams}`
-      : window.location.pathname;
+      filters.location ? params.set('type', filters.location) : params.delete('type');
 
-    navigateTo(newUrl);
+      filters.experience ? params.set('level', filters.experience) : params.delete('level');
 
-  }, [filters, textToFilter, currentPage, navigateTo]);
+      currentPage > 1 ? params.set('page', currentPage) : params.delete('page');
+
+      return params;
+    });
+
+  }, [filters, textToFilter, currentPage]);
 
   return {
     jobs,
