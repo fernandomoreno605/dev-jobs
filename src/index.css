@@ -449,6 +449,9 @@ select {
 }
 
 .nav-link-active {
-  color: yellow;
+  color: var(--primary);
   pointer-events: none;
+  background-color: #efeeee;
+  border-radius: .2rem;
+  padding: .2rem;
 }
