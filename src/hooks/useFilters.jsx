@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { useRouter } from "./useRouter";
 import { useSearchParams } from "react-router";
 
 export function useFilters() {
@@ -26,8 +25,6 @@ export function useFilters() {
     location: '',
     experience: ''
   });
-
-  const { navigateTo } = useRouter();
 
   const totalPages = Math.ceil(totalResults / RESULTS_PER_PAGE);
 
