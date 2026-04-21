@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { Link } from "./Link";
+import styles from "./JobCard.module.css";
 
-export function JobCard({ title, company, description, data }) {
+export function JobCard({ title, company, description, data, jobId }) {
   const [isApplied, setIsApplied] = useState(false);
 
   const buttonText = isApplied ? 'Applied!' : 'Apply';
@@ -14,17 +16,26 @@ export function JobCard({ title, company, description, data }) {
       data-experience-level={data?.nivel}
     >
       <div>
-        <h3>{title}</h3>
+        <h3>
+          <Link className={styles.title} href={`/jobs/${jobId}`}>
+            {title}
+          </Link>
+        </h3>
         <small>{company}</small>
         <p>{description}</p>
       </div>
-      <button
-        disabled={isApplied}
-        className={`button-apply-job ${buttonClass}`}
-        onClick={handleApply}
-      >
-        {buttonText}
-      </button>
+      <div className={styles.actions}>
+        <Link className={styles.details} href={`/jobs/${jobId}`}>
+          Ver detalles
+        </Link>
+        <button
+          disabled={isApplied}
+          className={`button-apply-job ${buttonClass}`}
+          onClick={handleApply}
+        >
+          {buttonText}
+        </button>
+      </div>
     </article>
   )
 

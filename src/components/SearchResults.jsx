@@ -17,6 +17,7 @@ export default function SearchResults({ jobs }) {
             company={job.empresa}
             description={job.descripcion}
             data={job.data}
+            jobId={job.id}
           />
         ))}
       </div>
