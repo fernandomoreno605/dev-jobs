@@ -1,7 +1,7 @@
 import Footer from "./components/Footer.jsx"
 import Header from "./components/Header.jsx"
 import { Routes, Route } from "react-router"
-import { lazy, Suspense } from "react"
+import { lazy, Suspense } from "react";
 
 const HomePage = lazy(() => import("./pages/Home.jsx"));
 const SearchPage = lazy(() => import("./pages/Search.jsx"));
@@ -13,7 +13,13 @@ function App() {
   return (
     <>
       <Header />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={
+          <div
+            style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1rem' }}>
+            Loading...
+          </div>
+        }>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />

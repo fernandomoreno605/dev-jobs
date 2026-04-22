@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import styles from "./Details.module.css";
 import { useRouter } from "../hooks/useRouter";
 import { Link } from "../components/Link";
 import snarkdown from "snarkdown";
+import { useAuth } from "../context/AuthContext";
 
 function JobSection({ title, content }) {
 
@@ -27,6 +27,8 @@ export default function JobDetail() {
   const [job, setJob] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     async function getJobDetails({ id }) {
@@ -88,8 +90,8 @@ export default function JobDetail() {
         <h1 className={styles.title}>{job.titulo}</h1>
         <p className={styles.meta}>{job.empresa} · {job.ubicacion}</p>
       </header>
-      <button className={styles.applyButton}>
-        Aplicar ahora
+      <button disabled={!isLoggedIn} className={styles.applyButton}>
+        {isLoggedIn ? 'Aplicar ahora' : 'Inicia sesión para aplicar'}
       </button>
       <JobSection title={"Descripción del puesto"} content={job.content.description} />
       <JobSection title={"Responsabilidades"} content={job.content.responsibilities} />
