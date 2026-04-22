@@ -1,10 +1,10 @@
 import { NavLink } from "react-router";
 import { Link } from "./Link";
-import { useAuth } from "../context/AuthContext";
+import { useAuthStore } from "../store/authStore";
 
 export default function Header() {
 
-  const { isLoggedIn, login, logout } = useAuth();
+  const { isLoggedIn, login, logout } = useAuthStore();
 
   return (
     <header>

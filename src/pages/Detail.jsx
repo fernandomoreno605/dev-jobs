@@ -4,7 +4,7 @@ import styles from "./Details.module.css";
 import { useRouter } from "../hooks/useRouter";
 import { Link } from "../components/Link";
 import snarkdown from "snarkdown";
-import { useAuth } from "../context/AuthContext";
+import { useAuthStore } from "../store/authStore";
 
 function JobSection({ title, content }) {
 
@@ -28,7 +28,7 @@ export default function JobDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAuthStore();
 
   useEffect(() => {
     async function getJobDetails({ id }) {
