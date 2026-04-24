@@ -1,6 +1,19 @@
 import { useState } from "react";
 import { Link } from "./Link";
 import styles from "./JobCard.module.css";
+import { useFavoritesStore } from "../store/favoritesStore";
+
+function JobCardFavoriteButton(jobId) {
+  const { toggleFavorite, isFavorite } = useFavoritesStore();
+
+  return (
+    <button
+      onClick={() => toggleFavorite(jobId)}
+    >
+      {isFavorite(jobId) ? "❤️" : "🤍"}
+    </button>
+  );
+}
 
 export function JobCard({ title, company, description, data, jobId }) {
   const [isApplied, setIsApplied] = useState(false);
@@ -35,6 +48,7 @@ export function JobCard({ title, company, description, data, jobId }) {
         >
           {buttonText}
         </button>
+        <JobCardFavoriteButton jobId={jobId} />
       </div>
     </article>
   )
