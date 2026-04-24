@@ -5,6 +5,7 @@ import { useRouter } from "../hooks/useRouter";
 import { Link } from "../components/Link";
 import snarkdown from "snarkdown";
 import { useAuthStore } from "../store/authStore";
+import { useFavoritesStore } from "../store/favoritesStore";
 
 function JobSection({ title, content }) {
 
@@ -18,6 +19,17 @@ function JobSection({ title, content }) {
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </section>
+  );
+}
+function JobDetailFavoriteButton({ jobId }) {
+  const { toggleFavorite, isFavorite } = useFavoritesStore();
+
+  return (
+    <button
+      onClick={() => toggleFavorite(jobId)}
+    >
+      {isFavorite(jobId) ? "❤️" : "🤍"}
+    </button>
   );
 }
 
@@ -93,6 +105,7 @@ export default function JobDetail() {
       <button disabled={!isLoggedIn} className={styles.applyButton}>
         {isLoggedIn ? 'Aplicar ahora' : 'Inicia sesión para aplicar'}
       </button>
+      <JobDetailFavoriteButton jobId={job.id} />
       <JobSection title={"Descripción del puesto"} content={job.content.description} />
       <JobSection title={"Responsabilidades"} content={job.content.responsibilities} />
       <JobSection title={"Requisitos"} content={job.content.requirements} />
