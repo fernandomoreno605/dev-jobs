@@ -3,9 +3,8 @@ import { Link } from "./Link";
 import styles from "./JobCard.module.css";
 import { useFavoritesStore } from "../store/favoritesStore";
 
-function JobCardFavoriteButton(jobId) {
+function JobCardFavoriteButton({ jobId }) {
   const { toggleFavorite, isFavorite } = useFavoritesStore();
-
   return (
     <button
       onClick={() => toggleFavorite(jobId)}
