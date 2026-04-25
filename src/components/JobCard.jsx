@@ -2,23 +2,9 @@ import { useState } from "react";
 import { Link } from "./Link";
 import styles from "./JobCard.module.css";
 import { useFavoritesStore } from "../store/favoritesStore";
-
-function JobCardFavoriteButton({ jobId }) {
-  const { toggleFavorite, isFavorite } = useFavoritesStore();
-  return (
-    <button
-      onClick={() => toggleFavorite(jobId)}
-    >
-      {isFavorite(jobId) ? "❤️" : "🤍"}
-    </button>
-  );
-}
+import { useAuthStore } from "../store/authStore";
 
 export function JobCard({ title, company, description, data, jobId }) {
-  const [isApplied, setIsApplied] = useState(false);
-
-  const buttonText = isApplied ? 'Applied!' : 'Apply';
-  const buttonClass = isApplied ? 'is-applied' : '';
 
   return (
     <article
@@ -40,17 +26,43 @@ export function JobCard({ title, company, description, data, jobId }) {
         <Link className={styles.details} href={`/jobs/${jobId}`}>
           Ver detalles
         </Link>
-        <button
-          disabled={isApplied}
-          className={`button-apply-job ${buttonClass}`}
-          onClick={handleApply}
-        >
-          {buttonText}
-        </button>
+        <JobCardApplyButton jobId={jobId} />
         <JobCardFavoriteButton jobId={jobId} />
       </div>
     </article>
   )
+}
+
+function JobCardFavoriteButton({ jobId }) {
+  const { toggleFavorite, isFavorite } = useFavoritesStore();
+  const { isLoggedIn } = useAuthStore();
+
+  return (
+    <button
+      disabled={!isLoggedIn}
+      onClick={() => toggleFavorite(jobId)}
+    >
+      {isFavorite(jobId) ? "❤️" : "🤍"}
+    </button>
+  );
+}
+
+function JobCardApplyButton({ jobId }) {
+  const [isApplied, setIsApplied] = useState(false);
+  const { isLoggedIn } = useAuthStore();
+
+  const buttonText = isApplied ? 'Applied!' : 'Apply';
+  const buttonClass = isApplied ? 'is-applied' : '';
+
+  return (
+    <button
+      disabled={isApplied || !isLoggedIn}
+      className={`button-apply-job ${buttonClass}`}
+      onClick={handleApply}
+    >
+      {buttonText}
+    </button>
+  );
 
   function handleApply() {
     console.log('apply event');
