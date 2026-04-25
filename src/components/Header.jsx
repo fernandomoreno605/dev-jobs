@@ -4,10 +4,14 @@ import { useAuthStore } from "../store/authStore";
 import { useFavoritesStore } from "../store/favoritesStore";
 
 export default function Header() {
-
   const { isLoggedIn, login, logout } = useAuthStore();
+  const { clearFavorites } = useFavoritesStore()
   const totalFavorites = useFavoritesStore(state => state.countFavorites());
 
+  const handleLogout = () => {
+    logout();
+    clearFavorites();
+  }
 
   return (
     <header>
@@ -41,7 +45,7 @@ export default function Header() {
         }
       </nav>
       {isLoggedIn ? (
-        <button onClick={logout}>Cerrar sesión</button>
+        <button onClick={handleLogout}>Cerrar sesión</button>
       ) : (
         <button onClick={login}>Iniciar sesión</button>
       )}
