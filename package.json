@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:backend": "pnpm run watch --workspace=backend",
-    "dev:frontend": "pnpm run dev --workspace=frontend"
+    "dev:backend": "pnpm --filter dev-jobs-backend run watch",
+    "dev:frontend": "pnpm --filter dev-jobs-frontend run dev",
+    "dev": "pnpm --parallel run dev:backend dev:frontend"
   },
   "keywords": [],
   "author": "",
