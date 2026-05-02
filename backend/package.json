@@ -1,5 +1,5 @@
 {
-  "name": "dev-jobs-express",
+  "name": "dev-jobs-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,7 +8,7 @@
     "watch": "node --watch app.js"
   },
   "keywords": [],
-  "author": "midudev",
+  "author": "fernandomoreno605",
   "license": "ISC",
   "type": "module",
   "dependencies": {

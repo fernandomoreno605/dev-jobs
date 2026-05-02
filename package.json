@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:backend": "pnpm run watch --workspace=backend",
+    "dev:frontend": "pnpm run dev --workspace=frontend"
   },
   "keywords": [],
   "author": "",
