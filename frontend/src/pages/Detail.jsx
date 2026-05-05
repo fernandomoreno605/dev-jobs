@@ -6,6 +6,8 @@ import { Link } from "../components/Link";
 import snarkdown from "snarkdown";
 import { useAuthStore } from "../store/authStore";
 import { useFavoritesStore } from "../store/favoritesStore";
+import { Streamdown } from "streamdown";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function JobDetail() {
@@ -164,7 +166,11 @@ function AISummary({ jobId }) {
         <div
           className={styles.sectionContent}
         >
-          {summary}
+          <Streamdown
+            isAnimating={loading}
+          >
+            {summary}
+          </Streamdown>
         </div>
       </section>
     );
