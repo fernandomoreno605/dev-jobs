@@ -127,7 +127,7 @@ function ApplyButton() {
 
 function AISummary({ jobId }) {
   const [loading, setLoading] = useState(false);
-  const [summary, setSummary] = useState(null);
+  const [summary, setSummary] = useState('');
   const [error, setError] = useState(null);
 
   const generateSummary = async () => {
@@ -138,9 +138,17 @@ function AISummary({ jobId }) {
       if (!response.ok) {
         throw new Error('Error fetching summary');
       }
-      const data = await response.json();
-      console.log('found summary:', data.summary);
-      setSummary(data.summary);
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunkText = decoder.decode(value, { stream: true });
+
+        setSummary(previousValue => previousValue + chunkText);
+      }
     } catch (error) {
       console.error('[error] Error generating the Summary: ', error);
       setError('Error generating the Summary');
