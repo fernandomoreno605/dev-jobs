@@ -2,6 +2,15 @@ import { Router } from 'express';
 import OpenAI from 'openai';
 import { JobModel } from '../models/job.js';
 import { CONFIG } from '../config.js';
+import rateLimit from 'express-rate-limit';
+
+const aiRateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 5,
+  message: { error: 'Too many requests, try later again.' },
+  legacyHeaders: false,
+  standardHeaders: 'draft-8'
+});
 
 export const aiRouter = Router();
 
@@ -10,8 +19,12 @@ const openai = new OpenAI({
   baseURL: CONFIG.GEMINI_BASE_URL
 });
 
+aiRouter.use(aiRateLimiter);
+
 aiRouter.get('/summary/:id', async (request, response) => {
   const { id } = request.params;
+
+  // return response.json({summary: 'lorem ipsum'});
 
   const job = await JobModel.getById(id);
 
@@ -33,7 +46,10 @@ aiRouter.get('/summary/:id', async (request, response) => {
   ].join('\n');
 
   try {
-    const completion = await openai.chat.completions.create({
+    response.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    response.setHeader('Transfer-Encoding', 'chunked');
+
+    const stream = await openai.chat.completions.create({
       messages: [
         {
           role: 'system',
@@ -45,27 +61,29 @@ aiRouter.get('/summary/:id', async (request, response) => {
         },
       ],
       model: CONFIG.AI_MODEL,
-      reasoning_effort: "low"
+      reasoning_effort: "low",
+      stream: true
     });
 
-    const summary = completion.choices?.[0]?.message?.content?.trim();
-
-    if(!summary) {
-      return response
-        .status(502)
-        .json({error: 'No summary generated.'});
+    for await (const part of stream) {
+      const content = part.choices[0].delta.content;
+      if(content) {
+        response.write(content);
+      }
     }
-    console.info('Job summary: ', summary);
-    return response.json({summary});
+
+    response.end();
 
   } catch (error) {
-    console.error('Error: ',error)
-    return response
-      .status(500)
-      .json(
+    if(!response.headersSent) {
+      response.setHeader('Content-Type', 'application/json')
+
+      return response.status(500).json(
         {
           error: 'Something goes wrong generating the job summary.'
         });
+    }
+    return response.end();
   }
 
 });
