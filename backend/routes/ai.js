@@ -24,8 +24,6 @@ aiRouter.use(aiRateLimiter);
 aiRouter.get('/summary/:id', async (request, response) => {
   const { id } = request.params;
 
-  // return response.json({summary: 'lorem ipsum'});
-
   const job = await JobModel.getById(id);
 
   if (!job) {
@@ -75,6 +73,7 @@ aiRouter.get('/summary/:id', async (request, response) => {
     response.end();
 
   } catch (error) {
+    console.error('[Error]: AI', error);
     if(!response.headersSent) {
       response.setHeader('Content-Type', 'application/json')
 
