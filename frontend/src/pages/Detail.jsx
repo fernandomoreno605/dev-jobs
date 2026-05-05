@@ -6,6 +6,7 @@ import { Link } from "../components/Link";
 import snarkdown from "snarkdown";
 import { useAuthStore } from "../store/authStore";
 import { useFavoritesStore } from "../store/favoritesStore";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function JobDetail() {
   const { navigateTo } = useRouter();
@@ -18,7 +19,7 @@ export default function JobDetail() {
     async function getJobDetails({ id }) {
       try {
         setLoading(true);
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/jobs/${id}`);
+        const response = await fetch(`${API_URL}/jobs/${id}`);
         if (!response.ok) throw Error('Job not found');
         const data = await response.json();
         setJob(data);
@@ -75,6 +76,7 @@ export default function JobDetail() {
       </header>
       <ApplyButton />
       <JobDetailFavoriteButton jobId={job.id} />
+      <AISummary jobId={job.id}></AISummary>
       <JobSection title={"Descripción del puesto"} content={job.content.description} />
       <JobSection title={"Responsabilidades"} content={job.content.responsibilities} />
       <JobSection title={"Requisitos"} content={job.content.requirements} />
@@ -119,6 +121,54 @@ function ApplyButton() {
   return (
     <button disabled={!isLoggedIn} className={styles.applyButton}>
       {isLoggedIn ? 'Aplicar ahora' : 'Inicia sesión para aplicar'}
+    </button>
+  );
+}
+
+function AISummary({ jobId }) {
+  const [loading, setLoading] = useState(false);
+  const [summary, setSummary] = useState(null);
+  const [error, setError] = useState(null);
+
+  const generateSummary = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_URL}/ai/summary/${jobId}`);
+      if (!response.ok) {
+        throw new Error('Error fetching summary');
+      }
+      const data = await response.json();
+      console.log('found summary:', data.summary);
+      setSummary(data.summary);
+    } catch (error) {
+      console.error('[error] Error generating the Summary: ', error);
+      setError('Error generating the Summary');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (summary) {
+    return (
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>✨ Resumen generado por IA</h2>
+        <div
+          className={styles.sectionContent}
+        >
+          {summary}
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <button
+      onClick={generateSummary}
+      disabled={loading}
+      className={styles.applyButton}
+    >
+      {loading ? 'Generating summary...' : 'Generate Summary with AI ✨'}
     </button>
   );
 }
