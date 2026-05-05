@@ -25,7 +25,7 @@ aiRouter.get('/summary/:id', async (request, response) => {
   const prompt = [
     `Resume en 4-6 frases la siguiente oferta de trabajo:`,
     `Include: rol, empresa, ubicación and requisitos clave`,
-    `Usa un tono claro y directo en españo`,
+    `Usa un tono claro y directo en español`,
     `Titulo: ${job.titulo}`,
     `Empresa: ${job.empresa}`,
     `Ubicación: ${job.ubicacion}`,
