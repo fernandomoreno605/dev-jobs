@@ -61,7 +61,7 @@ export function useFilters() {
 
         const queryParams = params.toString();
 
-        const response = await fetch(`https://jscamp-api.vercel.app/api/jobs?${queryParams}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/jobs?${queryParams}`);
 
         const parsedResponse = await response.json();
         setTotalResults(parsedResponse.total);

@@ -18,10 +18,9 @@ export default function JobDetail() {
     async function getJobDetails({ id }) {
       try {
         setLoading(true);
-        const response = await fetch(`https://jscamp-api.vercel.app/api/jobs/${id}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/jobs/${id}`);
         if (!response.ok) throw Error('Job not found');
         const data = await response.json();
-        console.log('incoming data: ', data);
         setJob(data);
       } catch (error) {
         setError('An error happens: ', error);
